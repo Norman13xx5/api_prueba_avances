@@ -28,23 +28,40 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only(['identification_number', 'password', 'type' ]);
-
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
+        $credentials = $request->only('identification_number', 'password');
+        $token = Auth::guard('api')->setTTL(1440)->attempt($credentials);
+        $typeUser = $request->type == 1 ? 'professional' : 'patient';
+        if ($token) {
+            return response()->json([
+                "message" => "Bienvenido al sistema de gestión roles y permisos.",
+                "typeUser" => $typeUser,
+                'authorization' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ],
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "Las credenciales que ingresaste no son correctas, vuelve a intentarlo."
+            ], 401);
+        };
     }
 
     /**
-     * Get the authenticated User.
+     * A description of the entire PHP function.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param datatype $paramname description
+     * @throws Some_Exception_Class description of exception
+     * @return Some_Return_Value
      */
-    public function me()
+    public function getAllDataSesion()
     {
-        return response()->json(auth()->user());
+        try {
+            $data = Auth::guard('api')->user();
+            return response()->json(["message" => "Datos de sesion.", "data" => $data], 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => $e], 400);
+        };
     }
 
     /**
@@ -52,11 +69,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        Auth::guard('api')->logout();
+        return response()->json(["message" => "Successfully logged out"], 200);
     }
 
     /**
@@ -85,6 +101,13 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Register a new user.
+     *
+     * @param Request $request The request containing user information
+     * @throws \Illuminate\Validation\ValidationException If validation fails
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
