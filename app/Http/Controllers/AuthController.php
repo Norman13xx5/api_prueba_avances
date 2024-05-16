@@ -32,6 +32,15 @@ class AuthController extends Controller
         $token = Auth::guard('api')->setTTL(1440)->attempt($credentials);
         $typeUser = $request->type == 1 ? 'professional' : 'patient';
         if ($token) {
+            if ($request->password == $request->identification_number) {
+                return response()->json([
+                    "message" => "Password change required",
+                    'authorization' => [
+                        'token' => $token,
+                        'type' => 'bearer',
+                    ],
+                ], 403);
+            }
             return response()->json([
                 "message" => "Bienvenido al sistema de gestión roles y permisos.",
                 "typeUser" => $typeUser,
@@ -45,6 +54,28 @@ class AuthController extends Controller
                 "message" => "Las credenciales que ingresaste no son correctas, vuelve a intentarlo."
             ], 401);
         };
+    }
+
+    /**
+     * A description of the entire PHP function.
+     *
+     * @param Request $request The request containing user information
+     * @param $id
+     * @throws Some_Exception_Class description of exception
+     * @return Some_Return_Value
+     */
+    public function changePassword(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|max:100',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $user = User::find($id);
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return response()->json(["message" => "Changes password successfully"], 201);
     }
 
     /**
@@ -117,7 +148,6 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100',
             'phone_number' => 'required|max:100|',
             'location' => 'required|max:100|',
-            'password' => 'required|string|min:6',
             'type' => 'required|integer|max:2',
         ]);
         if ($validator->fails()) {
@@ -126,7 +156,7 @@ class AuthController extends Controller
 
         $user = User::create(array_merge(
             $validator->validate(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->identification_number)]
         ));
 
         return response()->json([

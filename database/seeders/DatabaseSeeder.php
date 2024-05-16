@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'brayan@gmail.com',
             'phone_number' => '3182834018',
             'location' => 'Colombia',
-            'password' => bcrypt('123456'), // Asegúrate de encriptar la contraseña
+            'password' => bcrypt('1096251126'), // Asegúrate de encriptar la contraseña
             'type' => 1,
         ]);
 
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'maria@example.com',
             'phone_number' => '555-123-4567',
             'location' => 'Bogotá, Colombia',
-            'password' => bcrypt('secreto123'), // Asegúrate de encriptar la contraseña
+            'password' => bcrypt('987654321'), // Asegúrate de encriptar la contraseña
             'type' => 2,
         ]);
 
