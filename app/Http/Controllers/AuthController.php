@@ -164,4 +164,31 @@ class AuthController extends Controller
             'user' => $user
         ], 201);
     }
+
+    public function resetPassword(Request $request)
+    {
+        // Valida la solicitud si es necesario
+        $request->validate([
+            'identification_number' => 'required|string|max:100',
+            'password' => 'required|string|min:6',
+        ]);
+
+        // Busca el usuario por su número de identificación
+        $user = User::where('identification_number', $request->identification_number)->first();
+
+        // Verifica si el usuario fue encontrado
+        if (!$user) {
+            return response()->json([
+                'message' => 'Usuario no encontrado'
+            ], 404);
+        }
+
+        // Actualiza la contraseña del usuario
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json([
+            'message' => '¡Usuario actualizado exitosamente!'
+        ], 201);
+    }
 }

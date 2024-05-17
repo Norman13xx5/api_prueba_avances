@@ -24,20 +24,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
+    Route::post('resetpassword', 'resetPassword');
     Route::post('logout', 'logout');
     Route::get('dataSesion', 'getAllDataSesion');
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::post('users', 'store');
-    Route::get('users', 'index');
-    Route::delete('user/{id}', 'destroy');
+    Route::get('user/{id}', 'show');
+    Route::put('user/{id}', 'update');
 });
 
 Route::controller(HistoriesController::class)->group(function () {
-    Route::get('histories',  'store');
     Route::get('histories/{id}', 'index');
+    Route::post('histories',  'store');
     Route::get('history/{id}', 'show');
     Route::put('history/{id}', 'update');
     Route::delete('history/{id}', 'destroy');
+    Route::get('historypatient/{id}', 'historyPatient');
+    Route::patch('confirmassistance/{id}', 'confirmAssistance');
 });

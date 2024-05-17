@@ -49,7 +49,8 @@ class DatabaseSeeder extends Seeder
                 'medical_history' => 'Historia médica...',
                 'final_evolution' => 'Evolución final...',
                 'professional_concept' => 'Concepto profesional...',
-                'recommendations' => 'Recomendaciones...'
+                'recommendations' => 'Recomendaciones...',
+                'assistance' => false
             
         ]);
     }

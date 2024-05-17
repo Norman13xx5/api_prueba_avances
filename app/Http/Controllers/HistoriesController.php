@@ -31,6 +31,18 @@ class HistoriesController extends Controller
     }
 
     /**
+     * Obtiene un registro de historia médica específico.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function historyPatient($id)
+    {
+        $histories = Histories::with('patientOne', 'professionalOne')->where('patient_id', $id)->whereNull('deleted_at')->get();
+        return response()->json($histories);
+    }
+
+    /**
      * Crea un nuevo registro de historia médica.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -63,11 +75,22 @@ class HistoriesController extends Controller
         $history->final_evolution = $request->input('final_evolution');
         $history->professional_concept = $request->input('professional_concept');
         $history->recommendations = $request->input('recommendations');
+        $history->assistance = false;
         $history->save();
 
         return response()->json(['message' => 'Historia médica creada correctamente']);
     }
 
+    public function confirmAssistance($id)
+    {
+        $history = Histories::where('id', $id)->where('assistance', false)->whereNull('deleted_at')->first();
+        if (!$history) {
+            return response()->json(['message' => 'Esta historia ya fue confirmada o no existe'], 404);
+        }
+        $history->assistance = true;
+        $history->save();
+        return response()->json(['message' => 'Historia medica confirmada correctamente'], 200);
+    }
     /**
      * Obtiene un registro de historia médica específico.
      *
@@ -76,8 +99,7 @@ class HistoriesController extends Controller
      */
     public function show($id)
     {
-        $history = Histories::with('patientOne', 'professionalOne')->where('id', $id)->whereNull('deleted_at')->get();
-
+        $history = Histories::with('patientOne', 'professionalOne')->where('id', $id)->whereNull('deleted_at')->first();
         if (!$history) {
             return response()->json(['message' => 'Historia médica no encontrada'], 404);
         }
@@ -93,6 +115,11 @@ class HistoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $history = Histories::where('id', $id)->whereNull('deleted_at')->first();
+        if (!$history) {
+            return response()->json(['message' => 'Historia médica no encontrada'], 404);
+        }
+
         $request->validate([
             'patient_id' => 'required|exists:users,id',
             'professional_id' => 'required|exists:users,id',
@@ -106,20 +133,7 @@ class HistoriesController extends Controller
             'recommendations' => 'nullable|string',
         ]);
 
-        // Actualización del registro
-        $history = Histories::where('id', $id)->whereNull('deleted_at')->get();
-        $history->patient_id = $request->input('patient_id');
-        $history->professional_id = $request->input('professional_id');
-        $history->patient_info = $request->input('patient_info');
-        $history->date_time = $request->input('date_time');
-        $history->consecutive_number = $request->input('consecutive_number');
-        $history->patient_status = $request->input('patient_status');
-        $history->medical_history = $request->input('medical_history');
-        $history->final_evolution = $request->input('final_evolution');
-        $history->professional_concept = $request->input('professional_concept');
-        $history->recommendations = $request->input('recommendations');
-        $history->save();
-
+        $history->update($request->all());
         return response()->json(['message' => 'Historia médica actualizada correctamente']);
     }
 
@@ -131,7 +145,7 @@ class HistoriesController extends Controller
      */
     public function destroy($id)
     {
-        $history = Histories::where('id', $id)->whereNull('deleted_at')->get();
+        $history = Histories::where('id', $id)->whereNull('deleted_at')->first();
         if (!$history) {
             return response()->json(['message' => 'Historia médica no encontrada'], 404);
         }

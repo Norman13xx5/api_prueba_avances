@@ -46,9 +46,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = auth()->user();
-        if ($id != $user->identification_number) {
-            return response()->json(['message' => 'Requiere autenticación'], 401);
+        $user = User::where('identification_number', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
         $userDetails = [
             'identification_number' => $user->identification_number,
@@ -76,22 +76,20 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = auth()->user();
-        if ($id != $user->identification_number) {
-            return response()->json(['message' => 'Requiere autenticación'], 401);
+        $user = User::where('identification_number', $id)->first();
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
-
-        // $request->validate([
-        //     'identification_number' => 'required|string|max:100',
-        //     'first_name' => 'required|max:100|',
-        //     'last_name' => 'required|max:100|',
-        //     'email' => 'required|string|email|max:100',
-        //     'phone_number' => 'required|max:100|',
-        //     'location' => 'required|max:100|',
-        //     'password' => 'required|string|min:6',
-        //     'type' => 'required|integer|max:2',
-        // ]);
-
+        $request->validate([
+            'identification_number' => 'required|string|max:100',
+            'first_name' => 'required|max:100|',
+            'last_name' => 'required|max:100|',
+            'email' => 'required|string|email|max:100',
+            'phone_number' => 'required|max:100|',
+            'location' => 'required|max:100|',
+            'password' => 'required|string|min:6',
+            'type' => 'required|integer|max:2',
+        ]);
         $user->update([
             'identification_number' => $request->input('identification_number'),
             'first_name' => $request->input('first_name'),
