@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -38,6 +39,7 @@ class AuthController extends Controller
                     'authorization' => [
                         'token' => $token,
                         'type' => 'bearer',
+                        'identification_number' => auth()->user()->identification_number,
                     ],
                 ], 403);
             }
@@ -54,28 +56,6 @@ class AuthController extends Controller
                 "message" => "Las credenciales que ingresaste no son correctas, vuelve a intentarlo."
             ], 401);
         };
-    }
-
-    /**
-     * A description of the entire PHP function.
-     *
-     * @param Request $request The request containing user information
-     * @param $id
-     * @throws Some_Exception_Class description of exception
-     * @return Some_Return_Value
-     */
-    public function changePassword(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|string|max:100',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $user = User::find($id);
-        $user->password = bcrypt($request->password);
-        $user->save();
-        return response()->json(["message" => "Changes password successfully"], 201);
     }
 
     /**
@@ -102,8 +82,12 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::guard('api')->logout();
-        return response()->json(["message" => "Successfully logged out"], 200);
+        try {
+            JWTAuth::parseToken()->invalidate();
+            return response()->json(['message' => 'Logout exitoso', 'status' => 200], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al cerrar sesión', 'status' => 500], 500);
+        }
     }
 
     /**
@@ -179,7 +163,7 @@ class AuthController extends Controller
         // Verifica si el usuario fue encontrado
         if (!$user) {
             return response()->json([
-                'message' => 'Usuario no encontrado'
+                'message' => 'Usuario no encontrado', 'status' => 404
             ], 404);
         }
 
@@ -188,7 +172,8 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => '¡Usuario actualizado exitosamente!'
-        ], 201);
+            'message' => '¡Usuario actualizado exitosamente!',
+            'status' => 201
+        ], status: 201);
     }
 }

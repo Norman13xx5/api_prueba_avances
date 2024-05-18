@@ -100,7 +100,7 @@ class UserController extends Controller
             'password' => bcrypt($request->input('password')),
             'type' => $request->input('type'),
         ]);
-        return response()->json(['message' => 'Usuario actualizado correctamente'], 200);
+        return response()->json(['message' => 'Usuario actualizado correctamente', 'status' => 200], 200);
     }
 
 

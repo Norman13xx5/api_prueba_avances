@@ -78,7 +78,7 @@ class HistoriesController extends Controller
         $history->assistance = false;
         $history->save();
 
-        return response()->json(['message' => 'Historia médica creada correctamente']);
+        return response()->json(['message' => 'Historia médica creada correctamente'], 201);
     }
 
     public function confirmAssistance($id)
@@ -134,7 +134,7 @@ class HistoriesController extends Controller
         ]);
 
         $history->update($request->all());
-        return response()->json(['message' => 'Historia médica actualizada correctamente']);
+        return response()->json(['message' => 'Historia médica actualizada correctamente'], 200);
     }
 
     /**
