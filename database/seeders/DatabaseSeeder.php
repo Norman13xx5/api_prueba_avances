@@ -40,8 +40,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Histories::create([
-                'patient_id' => 2,
-                'professional_id' => 1,
+                'patient_id' => '987654321',
+                'professional_id' => '123456',
                 'patient_info' => 'Información del paciente...',
                 'date_time' => '2024-05-15 18:20:00',
                 'consecutive_number' => 1,
