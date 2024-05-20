@@ -65,11 +65,15 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## Migraciones
-<!-- Migracion con sedders -->
-    php artisan migrate --seed
-<!-- Retroceder la ultima migracion -->
-    php artisan migrate:rollback
+## Iniciar el proyecto
+composer install or composer update
 
+## Generar Key
+php artisan key:generate
+php artisan jwt:secret
+
+## Migraciones
+    php artisan migrate --seed
+    php artisan migrate:rollback
 ## Limpiar Cache Rutas
     php artisan route:clear

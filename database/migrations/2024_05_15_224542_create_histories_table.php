@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
-            $table->string('patient_id')->nullable();
-            $table->string('professional_id')->nullable();
+            $table->unsignedBigInteger('patient_id')->nullable();
+            $table->unsignedBigInteger('professional_id')->nullable();
             $table->text('patient_info');
             $table->dateTime('date_time');
             $table->integer('consecutive_number');
@@ -28,8 +28,8 @@ return new class extends Migration
             $table->timestamps();
 
             // Relación con la tabla de pacientes
-            $table->foreign('patient_id')->references('identification_number')->on('users');
-            $table->foreign('professional_id')->references('identification_number')->on('users');
+            $table->foreign('patient_id')->references('id')->on('users');
+            $table->foreign('professional_id')->references('id')->on('users');
         });
     }
     /**
