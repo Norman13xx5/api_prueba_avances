@@ -51,6 +51,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
         $userDetails = [
+            'id' => $user->id,
             'identification_number' => $user->identification_number,
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
@@ -74,9 +75,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        $user = User::where('identification_number', $id)->first();
+        $user = User::where('id', $id)->first();
         if (!$user) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }

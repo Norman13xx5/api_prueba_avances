@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Histories;
+use App\Models\User;
 
 class HistoriesController extends Controller
 {
@@ -26,7 +27,8 @@ class HistoriesController extends Controller
      */
     public function index($id)
     {
-        $histories = Histories::with('patientOne', 'professionalOne')->where('professional_id', $id)->whereNull('deleted_at')->get();
+        $user = User::where('identification_number', $id)->value('id');
+        $histories = Histories::with('patientOne', 'professionalOne')->where('professional_id', $user)->whereNull('deleted_at')->get();
         return response()->json($histories);
     }
 

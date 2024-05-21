@@ -40,7 +40,7 @@ class AuthController extends Controller
                         'token' => $token,
                         'type' => 'bearer',
                         'identification_number' => auth()->user()->identification_number,
-                        'typeuser' => str(auth()->user()->type),
+                        'id' => auth()->user()->type,
                     ],
                 ], 403);
             }
@@ -51,7 +51,7 @@ class AuthController extends Controller
                     'token' => $token,
                     'type' => 'bearer',
                     'identification_number' => auth()->user()->identification_number,
-                    'typeuser' => str(auth()->user()->type),
+                    'typeuser' => auth()->user()->type,
                 ],
             ], 200);
         } else {
