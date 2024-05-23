@@ -40,7 +40,8 @@ class HistoriesController extends Controller
      */
     public function historyPatient($id)
     {
-        $histories = Histories::with('patientOne', 'professionalOne')->where('patient_id', $id)->whereNull('deleted_at')->get();
+        $user = User::where('identification_number', $id)->value('id');
+        $histories = Histories::with('patientOne', 'professionalOne')->where('patient_id', $user)->whereNull('deleted_at')->get();
         return response()->json($histories);
     }
 

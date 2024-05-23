@@ -36,11 +36,11 @@ class AuthController extends Controller
             if ($request->password == $request->identification_number) {
                 return response()->json([
                     "message" => "Password change required",
+                    "typeUser" => $typeUser,
                     'authorization' => [
                         'token' => $token,
                         'type' => 'bearer',
                         'identification_number' => auth()->user()->identification_number,
-                        'id' => auth()->user()->type,
                     ],
                 ], 403);
             }
@@ -51,7 +51,6 @@ class AuthController extends Controller
                     'token' => $token,
                     'type' => 'bearer',
                     'identification_number' => auth()->user()->identification_number,
-                    'typeuser' => auth()->user()->type,
                 ],
             ], 200);
         } else {
