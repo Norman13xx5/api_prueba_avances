@@ -56,8 +56,8 @@ class NoteController extends Controller
         }
 
         $request->validate([
-            'titulo' => 'sometimes|string|max:255',
-            'contenido' => 'sometimes|string',
+            'title' => 'sometimes|string|max:255',
+            'content' => 'sometimes|string',
         ]);
 
         $nota->update($request->all());

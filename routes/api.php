@@ -20,7 +20,10 @@ use App\Http\Controllers\UserController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+
 });
+
+
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
@@ -35,20 +38,23 @@ Route::controller(UserController::class)->group(function () {
     Route::put('user/{id}', 'update');
 });
 
-Route::controller(NoteController::class)->group(function () {
-    Route::get('notes', 'index');
-    Route::post('note', 'store');
-    Route::get('note/{id}', 'show');
-    Route::put('note/{id}', 'update');
-    Route::delete('note/{id}', 'destroy');
-});
+Route::middleware('auth:api')->group(function () {
 
-Route::controller(HistoriesController::class)->group(function () {
-    Route::get('histories/{id}', 'index');
-    Route::post('histories',  'store');
-    Route::get('history/{id}', 'show');
-    Route::put('history/{id}', 'update');
-    Route::delete('history/{id}', 'destroy');
-    Route::get('historypatient/{id}', 'historyPatient');
-    Route::patch('confirmassistance/{id}', 'confirmAssistance');
+    Route::controller(NoteController::class)->group(function () {
+        Route::get('notes', 'index');
+        Route::post('note', 'store');
+        Route::get('note/{id}', 'show');
+        Route::put('note/{id}', 'update');
+        Route::delete('note/{id}', 'destroy');
+    });
+
+    Route::controller(HistoriesController::class)->group(function () {
+        Route::get('histories/{id}', 'index');
+        Route::post('histories', 'store');
+        Route::get('history/{id}', 'show');
+        Route::put('history/{id}', 'update');
+        Route::delete('history/{id}', 'destroy');
+        Route::get('historypatient/{id}', 'historyPatient');
+        Route::patch('confirmassistance/{id}', 'confirmAssistance');
+    });
 });
