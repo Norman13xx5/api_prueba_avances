@@ -68,12 +68,15 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## Iniciar el proyecto
 composer install or composer update
 
-## Generar Key
-php artisan key:generate
-php artisan jwt:secret
+## Generar Key JWT_SECRET=tu_llave_secreta
+    php artisan key:generate
+    php artisan jwt:secret
 
 ## Migraciones
     php artisan migrate --seed
     php artisan migrate:rollback
 ## Limpiar Cache Rutas
     php artisan route:clear
+
+
+

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HistoriesController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -32,6 +33,14 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('user/{id}', 'show');
     Route::put('user/{id}', 'update');
+});
+
+Route::controller(NoteController::class)->group(function () {
+    Route::get('notes', 'index');
+    Route::post('note', 'store');
+    Route::get('note/{id}', 'show');
+    Route::put('note/{id}', 'update');
+    Route::delete('note/{id}', 'destroy');
 });
 
 Route::controller(HistoriesController::class)->group(function () {
